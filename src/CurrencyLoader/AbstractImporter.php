@@ -168,4 +168,15 @@ abstract class AbstractImporter
             $this->output->writeln("<$type>" . $msg . "</$type>");
         }
     }
+
+    /**
+     * get sourceUrl
+     *
+     * @return string
+     */
+    public function getCurrencySource(): string
+    {
+        return $this->currencySource;
+    }
+    
 }

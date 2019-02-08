@@ -7,6 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EcbProvider extends AbstractImporter implements ProviderInterface
 {
+    protected const BASE_CURRENCY = "EUR";
+
     public function __construct(EntityManagerInterface $em, string $sourceUrl)
     {
         $this->currencySource = Currency::SOURCES_ECB;
@@ -44,6 +46,9 @@ class EcbProvider extends AbstractImporter implements ProviderInterface
         if (!count($items)) {
             throw new \Exception('Not has items');
         }
+
+        $items[self::BASE_CURRENCY] =
+            new CurrencyDto(self::BASE_CURRENCY, $this->currencySource, self::BASE_CURRENCY, 1);
 
         return $items;
     }

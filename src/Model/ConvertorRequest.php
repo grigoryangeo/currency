@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use JMS\Serializer\Annotation as Serializer;
+use App\Entity\Currency;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
@@ -11,20 +11,14 @@ class ConvertorRequest
     /**
      * Code currency from
      *
-     * @var string
-     * @Serializer\Since("1.0")
-     * @Serializer\Groups({"api"})
-     * @Serializer\Type("string")
+     * @var Currency
      */
     protected $from;
 
     /**
      * Code currency to
      *
-     * @var string
-     * @Serializer\Since("1.0")
-     * @Serializer\Groups({"api"})
-     * @Serializer\Type("string")
+     * @var Currency
      */
     protected $to;
 
@@ -32,9 +26,6 @@ class ConvertorRequest
      * Code currency from
      *
      * @var float
-     * @Serializer\Since("1.0")
-     * @Serializer\Groups({"api"})
-     * @Serializer\Type("number")
      */
     protected $value;
 
@@ -43,46 +34,44 @@ class ConvertorRequest
      */
     public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addPropertyConstraint('from', new Assert\Length(['max' => 5]));
         $metadata->addPropertyConstraint('from', new Assert\NotBlank());
-        $metadata->addPropertyConstraint('to', new Assert\Length(['max' => 5]));
         $metadata->addPropertyConstraint('to', new Assert\NotBlank());
         $metadata->addPropertyConstraint('value', new Assert\NotBlank());
     }
 
     /**
-     * @return null|string
+     * @return null|Currency
      */
-    public function getFrom():?string
+    public function getFrom():?Currency
     {
         return $this->from;
     }
 
     /**
-     * @param string $from
+     * @param Currency $from
      *
      * @return self
      */
-    public function setFrom(string $from): self
+    public function setFrom(Currency $from): self
     {
         $this->from = $from;
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return null|Currency
      */
-    public function getTo():?string
+    public function getTo():?Currency
     {
         return $this->to;
     }
 
     /**
-     * @param string $to
+     * @param Currency $to
      *
      * @return self
      */
-    public function setTo(string $to): self
+    public function setTo(Currency $to): self
     {
         $this->to = $to;
         return $this;

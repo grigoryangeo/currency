@@ -18,8 +18,6 @@ class Convertor
     /**
      * Convert
      *
-     * @access public
-     *
      * @param ConvertorRequest $convertorRequest
      *
      * @return float
@@ -29,17 +27,23 @@ class Convertor
         $from = $convertorRequest->getFrom();
         $to   = $convertorRequest->getTo();
 
-        return $convertorRequest->getValue();
+        $fromValue = $from->getValue();
+        $toValue   = $to->getValue();
+        $value     = $convertorRequest->getValue();
+
+        $fromValueInBase = $fromValue * $value;
+
+        return round($fromValueInBase / $toValue, 4);
     }
 
     /**
-     * Get available currency
+     * Get currency source
      *
      * @access public
-     * @return array
+     * @return string
      */
-    public function getAvailableCurrencies(): array
+    public function getCurrencySource(): string
     {
-        return $this->currencyProvider->getAvailableCurrencies();
+        return $this->currencyProvider->getCurrencySource();
     }
 }

@@ -40,11 +40,5 @@ services:
 
     App\CurrencyConvertor\Convertor:
         arguments:
-            - '@App\CurrencyLoader\CbrProvider'
+            - '@App\CurrencyLoader\EcbProvider'
         public: true
-
-    App\Form\ConvertType:
-        arguments:
-            - '@App\CurrencyConvertor\Convertor'
-        tags: [form.type]
-        public: false

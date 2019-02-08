@@ -7,6 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CbrProvider extends AbstractImporter implements ProviderInterface
 {
+    protected const BASE_CURRENCY = "RUB";
+
     public function __construct(EntityManagerInterface $em, string $sourceUrl)
     {
         $this->currencySource = Currency::SOURCES_CBR;
@@ -25,9 +27,15 @@ class CbrProvider extends AbstractImporter implements ProviderInterface
     {
         $items = [];
         foreach ($xmlItems as $xmlItem) {
-            $code         = (string) $xmlItem->CharCode;
-            $value        = (float) $xmlItem->Value;
-            $name         = (string) $xmlItem->Name;
+            $code    = (string) $xmlItem->CharCode;
+            $value   = (float) $xmlItem->Value;
+            $name    = (string) $xmlItem->Name;
+            $nominal = (int) $xmlItem->Nominal;
+
+            if ($nominal > 1) {
+                $value = round($value / $nominal, 4);
+            }
+
             $item         = new CurrencyDto($code, $this->currencySource, $name, $value);
             $items[$code] = $item;
         }
@@ -35,6 +43,9 @@ class CbrProvider extends AbstractImporter implements ProviderInterface
         if (!count($items)) {
             throw new \Exception('Not has items');
         }
+
+        $items[self::BASE_CURRENCY] =
+            new CurrencyDto(self::BASE_CURRENCY, $this->currencySource, self::BASE_CURRENCY, 1);
 
         return $items;
     }
