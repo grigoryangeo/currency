@@ -1,0 +1,8 @@
+api_v1_convert:
+    path: /currency/convert.{_format}
+    methods: GET
+    defaults:
+      _format: json
+    requirements:
+      _format: json|xml
+    controller: App\Controller\Api\ConvertorController::convertAction

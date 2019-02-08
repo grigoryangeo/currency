@@ -1,0 +1,33 @@
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\Currency;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Persistence\ObjectManager;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager)
+    {
+        $currency = new Currency();
+        $currency->setCode("test1");
+        $currency->setName("test1");
+        $currency->setValue(12.4);
+        $manager->persist($currency);
+
+        $currency = new Currency();
+        $currency->setCode("test2");
+        $currency->setName("test2");
+        $currency->setValue(6.2);
+        $manager->persist($currency);
+
+        $currency = new Currency();
+        $currency->setCode("test3");
+        $currency->setName("test3");
+        $currency->setValue(12);
+        $manager->persist($currency);
+
+        $manager->flush();
+    }
+}

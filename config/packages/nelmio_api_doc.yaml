@@ -1,0 +1,10 @@
+nelmio_api_doc:
+    documentation:
+        schemes: [http]
+        info:
+            title: Документация к АПИ
+            description: Документация к АПИ для конвертации валют
+            version: v1
+    areas:
+        path_patterns:
+            - ^/api(?!/doc$)
