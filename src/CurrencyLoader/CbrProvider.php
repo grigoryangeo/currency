@@ -35,7 +35,7 @@ class CbrProvider extends AbstractImporter implements ProviderInterface
             if ($nominal > 1) {
                 $value = round($value / $nominal, 4);
             }
-
+            $value        = 1 / $value;
             $item         = new CurrencyDto($code, $this->currencySource, $name, $value);
             $items[$code] = $item;
         }

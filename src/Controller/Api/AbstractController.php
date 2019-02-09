@@ -2,22 +2,22 @@
 
 namespace App\Controller\Api;
 
+use App\CurrencyConvertor\Convertor;
 use App\Model\Response\AbstractResponse;
 use App\Model\Response\InvalidResponse;
 use App\Model\Response\SimpleResponse;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
 use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\Serializer;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SfAbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-abstract class AbstractController extends Controller
+abstract class AbstractController extends SfAbstractController
 {
-    /** @var  Serializer */
-    protected $serializer;
-
     protected $serializationContext;
 
     protected $deserializationContext;
@@ -37,12 +37,36 @@ abstract class AbstractController extends Controller
     /* @var array */
     protected $formats = ["json", "xml"];
 
-    public function setContainer(ContainerInterface $container = null)
-    {
-        parent::setContainer($container);
+    /** @var ViewHandler */
+    protected $viewHandler;
+
+    /** @var FormFactoryInterface */
+    protected $formFactory;
+
+    /** @var ValidatorInterface */
+    protected $validator;
+
+    /** @var Convertor */
+    protected $convertor;
+
+    /** @var RequestStack */
+    protected $requestStack;
+
+    public function __construct(
+        ViewHandler $viewHandler,
+        FormFactoryInterface $formFactory,
+        ValidatorInterface $validator,
+        RequestStack $requestStack,
+        Convertor $convertor
+    ) {
+        $this->viewHandler = $viewHandler;
+        $this->formFactory = $formFactory;
+        $this->validator   = $validator;
+        $this->convertor   = $convertor;
+        $this->convertor   = $convertor;
 
         // Получение из строки запроса версии API
-        $request = $container->get('request_stack')->getCurrentRequest();
+        $request = $requestStack->getCurrentRequest();
 
         $pathParts        = preg_split('/\//', $request->getPathInfo(), -1, PREG_SPLIT_NO_EMPTY);
         $this->apiVersion = substr($pathParts[1], 1) . '.0';
@@ -58,8 +82,7 @@ abstract class AbstractController extends Controller
             $format = $this->formats[0];
         }
 
-        $this->serializer = $this->get('jms_serializer');
-        $this->view       = View::create()->setFormat($format)->setStatusCode(200);
+        $this->view = View::create()->setFormat($format)->setStatusCode(200);
 
         $this->serializationContext = new Context();
         $this->serializationContext->setVersion($this->apiVersion);
@@ -81,7 +104,7 @@ abstract class AbstractController extends Controller
 
         $this->view->setStatusCode($statusCode)->setData($response);
 
-        return $this->get('fos_rest.view_handler')->handle($this->view);
+        return $this->viewHandler->handle($this->view);
     }
 
     /**
@@ -106,6 +129,6 @@ abstract class AbstractController extends Controller
         $response = new InvalidResponse($message, $errors);
         $this->view->setStatusCode($statusCode)->setData($response);
 
-        return $this->get('fos_rest.view_handler')->handle($this->view);
+        return $this->viewHandler->handle($this->view);
     }
 }

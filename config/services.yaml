@@ -40,5 +40,14 @@ services:
 
     App\CurrencyConvertor\Convertor:
         arguments:
-            - '@App\CurrencyLoader\EcbProvider'
+            - '@App\CurrencyLoader\CbrProvider'
         public: true
+
+    App\Controller\Api\ConvertorController:
+        arguments:
+            - '@fos_rest.view_handler'
+            - '@form.factory'
+            - '@validator'
+            - '@request_stack'
+            - '@App\CurrencyConvertor\Convertor'
+        tags: ['controller.service_arguments']

@@ -31,9 +31,9 @@ class Convertor
         $toValue   = $to->getValue();
         $value     = $convertorRequest->getValue();
 
-        $fromValueInBase = $fromValue * $value;
+        $convertedValue = ($value * $toValue) / $fromValue;
 
-        return round($fromValueInBase / $toValue, 4);
+        return round($convertedValue, 4);
     }
 
     /**

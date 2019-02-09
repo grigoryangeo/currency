@@ -2,26 +2,20 @@
 
 namespace App\Controller\Api;
 
-use App\CurrencyConvertor\Convertor;
 use App\Form\ConvertType;
 use App\Model\ConvertorRequest;
 use App\Model\ConvertorResponse;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConvertorController extends AbstractController
 {
     /**
      * Convert currency
      *
-     * @param Request              $request
-     * @param FormFactoryInterface $formFactory
-     * @param ValidatorInterface   $validator
-     * @param Convertor            $convertor
+     * @param Request $request
      *
      * @return Response
      *
@@ -53,23 +47,19 @@ class ConvertorController extends AbstractController
      * )
      * @SWG\Tag(name="Currency")
      */
-    public function convertAction(
-        Request $request,
-        FormFactoryInterface $formFactory,
-        ValidatorInterface $validator,
-        Convertor $convertor
-    ) {
+    public function convertAction(Request $request)
+    {
         $convertorRequest = new ConvertorRequest();
-        $convertForm      = $formFactory->createNamed('', ConvertType::class, $convertorRequest);
+        $convertForm      = $this->formFactory->createNamed('', ConvertType::class, $convertorRequest);
         $convertForm->handleRequest($request);
 
         if ($convertForm->isSubmitted() && $convertForm->isValid()) {
-            $errors = $validator->validate($convertorRequest);
+            $errors = $this->validator->validate($convertorRequest);
             if (count($errors) > 0) {
                 return $this->getInvalidResponse('Errors in the input parameters', (string) $errors);
             }
 
-            $value = $convertor->convert($convertorRequest);
+            $value = $this->convertor->convert($convertorRequest);
             return $this->getSuccessfulResponse(new ConvertorResponse($value));
         } else {
             return $this->getInvalidResponse('Errors in the input parameters', $convertForm->getErrors(true));

@@ -4,11 +4,11 @@ namespace App\Command;
 
 use App\CurrencyLoader\CbrProvider;
 use App\CurrencyLoader\EcbProvider;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CurrencyImportCommand extends ContainerAwareCommand
+class CurrencyImportCommand extends Command
 {
     /** @var  CbrProvider */
     protected $cbrProvider;
@@ -33,9 +33,6 @@ class CurrencyImportCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $kernel    = $this->getApplication()->getKernel();
-        $container = $kernel->getContainer();
-
         $output->writeln('<comment>Start import currency from CBR</comment>');
         try {
             $this->cbrProvider->import($output);

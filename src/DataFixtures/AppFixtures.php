@@ -13,19 +13,33 @@ class AppFixtures extends Fixture
         $currency = new Currency();
         $currency->setCode("test1");
         $currency->setName("test1");
-        $currency->setValue(12.4);
+        $currency->setValue(1.1);
+        $currency->setSource("test1");
+        $currency->setActive(true);
         $manager->persist($currency);
 
         $currency = new Currency();
         $currency->setCode("test2");
         $currency->setName("test2");
-        $currency->setValue(6.2);
+        $currency->setValue(2.1);
+        $currency->setSource("test1");
+        $currency->setActive(true);
         $manager->persist($currency);
 
         $currency = new Currency();
         $currency->setCode("test3");
         $currency->setName("test3");
-        $currency->setValue(12);
+        $currency->setSource("test2");
+        $currency->setValue(3.1);
+        $currency->setActive(true);
+        $manager->persist($currency);
+
+        $currency = new Currency();
+        $currency->setCode("test4");
+        $currency->setName("test4");
+        $currency->setSource("test2");
+        $currency->setValue(4.1);
+        $currency->setActive(false);
         $manager->persist($currency);
 
         $manager->flush();

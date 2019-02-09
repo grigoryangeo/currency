@@ -10,4 +10,11 @@ interface ProviderInterface
      * @return array
      */
     public function formatData(\SimpleXMLElement $data): array;
+
+    /**
+     * Get currency source
+     *
+     * @return string
+     */
+    public function getCurrencySource(): string;
 }

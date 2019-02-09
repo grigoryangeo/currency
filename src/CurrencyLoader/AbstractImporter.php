@@ -170,7 +170,7 @@ abstract class AbstractImporter
     }
 
     /**
-     * get sourceUrl
+     * Get currency source
      *
      * @return string
      */
