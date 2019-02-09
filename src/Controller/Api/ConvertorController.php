@@ -53,16 +53,16 @@ class ConvertorController extends AbstractController
         $convertForm      = $this->formFactory->createNamed('', ConvertType::class, $convertorRequest);
         $convertForm->handleRequest($request);
 
-        if ($convertForm->isSubmitted() && $convertForm->isValid()) {
-            $errors = $this->validator->validate($convertorRequest);
-            if (count($errors) > 0) {
-                return $this->getInvalidResponse('Errors in the input parameters', (string) $errors);
-            }
-
-            $value = $this->convertor->convert($convertorRequest);
-            return $this->getSuccessfulResponse(new ConvertorResponse($value));
-        } else {
+        if($convertForm->isSubmitted() && !$convertForm->isValid()) {
             return $this->getInvalidResponse('Errors in the input parameters', $convertForm->getErrors(true));
         }
+
+        $errors = $this->validator->validate($convertorRequest);
+        if (count($errors) > 0) {
+            return $this->getInvalidResponse('Errors in the input parameters', $errors);
+        }
+
+        $value = $this->convertor->convert($convertorRequest);
+        return $this->getSuccessfulResponse(new ConvertorResponse($value));
     }
 }
