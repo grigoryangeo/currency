@@ -9,12 +9,17 @@ REST service allows you to convert currencies
 ### install
 
 >cp .env .env.local
+
 >edit db parametrs .env file
+
 >cp .env.test .env.test.local
+
 >edit db parametrs .env file
+
 >cp phpunit.xml.dist phpunit.xml
 
 >composer install
+
 >php ./bin/console d:s:u --force --env=prod
 
 ### console commands
@@ -31,5 +36,7 @@ http://localhost/api/v1/currency/convert.json?from=usd&to=rub&value=100
 ### run tests
 
 >php ./bin/console d:s:u --force --env=test
+
 >php ./bin/console d:f:l --env=test
+
 >php ./bin/phpunit
