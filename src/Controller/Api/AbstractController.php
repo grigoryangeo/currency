@@ -63,7 +63,6 @@ abstract class AbstractController extends SfAbstractController
         $this->formFactory = $formFactory;
         $this->validator   = $validator;
         $this->convertor   = $convertor;
-        $this->convertor   = $convertor;
 
         // Получение из строки запроса версии API
         $request = $requestStack->getCurrentRequest();
@@ -96,7 +95,7 @@ abstract class AbstractController extends SfAbstractController
      *
      * @return Response
      */
-    protected function getSuccessfulResponse(AbstractResponse $response = null, $statusCode = 200)
+    protected function getSuccessfulResponse(AbstractResponse $response = null, int $statusCode = 200)
     {
         if (!$response) {
             $response = new SimpleResponse();
@@ -112,19 +111,19 @@ abstract class AbstractController extends SfAbstractController
      *
      * @return Response
      */
-    protected function getNotFoundResponse($message = 'Not found')
+    protected function getNotFoundResponse(string $message = 'Not found')
     {
         return $this->getInvalidResponse($message, null, 404);
     }
 
     /**
      * @param  string $message
-     * @param  array  $errors     (default: null)
+     * @param         $errors     (default: null)
      * @param  int    $statusCode (default: 400)
      *
      * @return Response
      */
-    protected function getInvalidResponse($message, $errors = null, $statusCode = 400)
+    protected function getInvalidResponse(string $message, $errors = null, int $statusCode = 400)
     {
         $response = new InvalidResponse($message, $errors);
         $this->view->setStatusCode($statusCode)->setData($response);

@@ -25,7 +25,7 @@ class InvalidResponse extends AbstractResponse
      */
     public $errors;
 
-    public function __construct($message, $errors = null)
+    public function __construct(string $message, $errors = null)
     {
         $this->success  = false;
         $this->errorMsg = $message;

@@ -62,7 +62,11 @@ class ConvertorController extends AbstractController
             return $this->getInvalidResponse('Errors in the input parameters', $errors);
         }
 
-        $value = $this->convertor->convert($convertorRequest);
+        try {
+            $value = $this->convertor->convert($convertorRequest);
+        } catch (\Exception $e) {
+            return $this->getInvalidResponse('Errors in runtime', [$e->getMessage()]);
+        }
         return $this->getSuccessfulResponse(new ConvertorResponse($value));
     }
 }

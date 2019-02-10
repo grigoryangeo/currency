@@ -38,7 +38,7 @@ abstract class AbstractImporter
         $this->em        = $em;
 
         if (!$this->currencySource) {
-            throw new \Exception('CurrencyCode is required sourceUrl');
+            throw new \Exception('Currency source is required sourceUrl');
         }
 
         if (!filter_var($this->sourceUrl, FILTER_VALIDATE_URL)) {
@@ -151,7 +151,7 @@ abstract class AbstractImporter
      */
     public function getAvailableCurrencies(): array
     {
-        return $this->em->getRepository(Currency::class)->getAllBySource($this->currencySource);
+        return $this->em->getRepository(Currency::class)->getAllBySource($this->getCurrencySource());
     }
 
     /**
