@@ -7,20 +7,26 @@ use App\CurrencyLoader\EcbProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use App\CurrencyLoader\ProviderInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CurrencyImportCommand extends Command
 {
-    /** @var  CbrProvider */
-    protected $cbrProvider;
+    /** @var  []ProviderInterface */
+    protected $currencyProviders = [];
 
-    /** @var  EcbProvider */
-    protected $ecbProvider;
-
-    public function __construct(CbrProvider $cbrProvider, EcbProvider $ecbProvider)
+    public function __construct(iterable $currencyProviders)
     {
         parent::__construct();
-        $this->cbrProvider = $cbrProvider;
-        $this->ecbProvider = $ecbProvider;
+        foreach($currencyProviders as $currencyProvider) {
+            if($currencyProvider instanceof ProviderInterface) {
+                $this->currencyProviders[] = $currencyProvider;
+            }
+        }
+
+        if(!count($this->currencyProviders)) {
+            throw new \Exception('Not one currency provider found');
+        }
     }
 
     protected function configure()
@@ -33,18 +39,20 @@ class CurrencyImportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<comment>Start import currency from CBR</comment>');
-        try {
-            $this->cbrProvider->import($output);
-        } catch (\Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+        $io = new SymfonyStyle($input, $output);
+        $io->progressStart(count($this->currencyProviders));
+        foreach($this->currencyProviders as $currencyProvider)
+        {
+            $code = $currencyProvider->getCurrencySource();
+            $io->newLine();
+            $io->title("Start import currency from $code");
+            try {
+                $currencyProvider->import($output);
+            } catch (\Exception $e) {
+                $output->writeln('<error>' . $e->getMessage() . '</error>');
+            }
+            $io->progressAdvance();
         }
-
-        $output->writeln('<comment>Start import currency from ECB</comment>');
-        try {
-            $this->ecbProvider->import($output);
-        } catch (\Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
-        }
+        $io->progressFinish();
     }
 }

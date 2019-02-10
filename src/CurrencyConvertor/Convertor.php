@@ -10,9 +10,20 @@ class Convertor
     /** @var  ProviderInterface */
     protected $currencyProvider;
 
-    public function __construct(ProviderInterface $currencyProvider)
+    public function __construct(iterable $currencyProviders, string $activeSource)
     {
-        $this->currencyProvider = $currencyProvider;
+        foreach($currencyProviders as $currencyProvider) {
+            if($currencyProvider instanceof ProviderInterface) {
+
+                if($currencyProvider->getCurrencySource() == $activeSource) {
+                    $this->currencyProvider = $currencyProvider;
+                }
+            }
+        }
+
+        if(!$this->currencyProvider) {
+            throw new \Exception('Not one currency provider selected');
+        }
     }
 
     /**

@@ -30,17 +30,21 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '%env(SOURCE_ECB)%'
-        public: true
+        public: false
+        tags: ['currency.provider']
 
     App\CurrencyLoader\CbrProvider:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '%env(SOURCE_CBR)%'
-        public: true
+        public: false
+        tags: ['currency.provider']
+
+    App\Command\CurrencyImportCommand:
+        arguments: [!tagged currency.provider]
 
     App\CurrencyConvertor\Convertor:
-        arguments:
-            - '@App\CurrencyLoader\CbrProvider'
+        arguments: [!tagged currency.provider, '%env(CONVERTOR_SOURCE)%']
         public: true
 
     App\Controller\Api\ConvertorController:
