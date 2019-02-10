@@ -30,7 +30,9 @@ Import data
 ### use rest api
 
 http://localhost/api/v1/currency/convert?from=usd&to=rub&value=100
+
 http://localhost/api/v1/currency/convert.xml?from=usd&to=rub&value=100
+
 http://localhost/api/v1/currency/convert.json?from=usd&to=rub&value=100
 
 ### run tests
